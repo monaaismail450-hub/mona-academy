@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="theme-color" content="#070d1a"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="منى الأكاديمي"/>
+<meta name="description" content="لوحة منى الأكاديمية - رابطة كلية طب الأسنان"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon-192.svg"/>
+<title>منى الأكاديمي 🦷</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#070d1a; --s1:#0f1829; --s2:#162035; --s3:#1e2d4a;
+  --blue:#3b9eff; --purple:#8b5cf6; --green:#10d98a;
+  --red:#ff6b6b; --yellow:#fbbf24; --pink:#f472b6;
+  --text:#e8edf5; --muted:#6b7a99; --border:rgba(59,158,255,0.13);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{
+  font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text);
+  direction:rtl; display:flex; flex-direction:column;
+}
+
+/* ── HEADER ── */
+.header{
+  background:linear-gradient(135deg,#0d1826,#150e30);
+  border-bottom:1px solid var(--border);
+  padding:14px 18px; display:flex; align-items:center;
+  justify-content:space-between; flex-shrink:0;
+  position:relative; z-index:10;
+}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-icon{
+  width:38px;height:38px;border-radius:10px;font-size:20px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  display:flex;align-items:center;justify-content:center;
+}
+.brand h1{font-size:15px;font-weight:700;}
+.brand p{font-size:10px;color:var(--muted);font-family:'Tajawal';}
+.save-badge{
+  background:rgba(16,217,138,0.12);border:1px solid rgba(16,217,138,0.25);
+  color:var(--green);padding:4px 11px;border-radius:20px;
+  font-size:10px;font-family:'Tajawal';display:flex;align-items:center;gap:5px;
+}
+.save-dot{width:5px;height:5px;background:var(--green);border-radius:50%;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+
+/* ── TABS ── */
+.tabs{
+  display:flex; background:var(--s1);
+  border-bottom:1px solid var(--border); flex-shrink:0;
+}
+.tab{
+  flex:1; padding:13px 0; font-size:12px; font-weight:700;
+  font-family:'Cairo'; border:none; cursor:pointer;
+  background:transparent; color:var(--muted);
+  transition:all .2s; display:flex; align-items:center;
+  justify-content:center; gap:6px;
+  border-bottom:2px solid transparent;
+}
+.tab.active{color:var(--blue);border-bottom:2px solid var(--blue);background:rgba(59,158,255,0.05);}
+
+/* ── SCROLL AREA ── */
+.panels{flex:1;overflow:hidden;position:relative;}
+.panel{
+  position:absolute;inset:0;overflow-y:auto;
+  padding:18px;display:none;
+}
+.panel.active{display:block;}
+.panel::-webkit-scrollbar{width:3px;}
+.panel::-webkit-scrollbar-thumb{background:rgba(59,158,255,.3);border-radius:4px;}
+
+/* ── CARDS ── */
+.card{
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:14px;padding:16px;margin-bottom:14px;
+}
+.card-title{font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+
+/* ── STATS ROW ── */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.stat{
+  background:var(--s2);border:1px solid var(--border);
+  border-radius:12px;padding:12px;text-align:center;
+}
+.stat-num{font-size:22px;font-weight:900;}
+.stat-lbl{font-size:10px;color:var(--muted);font-family:'Tajawal';}
+
+/* ── INPUTS ── */
+.input-row{display:flex;flex-direction:column;gap:9px;margin-bottom:14px;}
+.inp, select.inp, textarea.inp{
+  width:100%;background:var(--s2);border:1px solid var(--border);
+  color:var(--text);padding:11px 13px;border-radius:10px;
+  font-family:'Cairo';font-size:13px;outline:none;
+  transition:border-color .2s;
+}
+.inp:focus,select.inp:focus,textarea.inp:focus{border-color:var(--blue);}
+select.inp option{background:var(--s2);}
+textarea.inp{min-height:80px;resize:none;}
+
+.btn-main{
+  width:100%;padding:12px;border-radius:11px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;font-family:'Cairo';font-size:14px;font-weight:700;
+  transition:opacity .2s, transform .15s;
+}
+.btn-main:active{opacity:.85;transform:scale(.98);}
+
+/* ── FOLDER CARDS ── */
+.folders{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.folder{
+  background:var(--s2);border:1px solid var(--border);
+  border-right:4px solid var(--fc,var(--blue));
+  border-radius:12px;overflow:hidden;transition:border-color .2s;
+}
+.folder.open{border-color:rgba(59,158,255,.35);}
+.folder-head{
+  display:flex;align-items:center;gap:10px;
+  padding:13px 14px;cursor:pointer;
+}
+.f-icon{font-size:22px;}
+.f-info{flex:1;}
+.f-name{font-size:13px;font-weight:700;}
+.f-count{font-size:10px;color:var(--muted);font-family:'Tajawal';}
+.f-badge{
+  background:rgba(59,158,255,.13);color:var(--blue);
+  padding:2px 9px;border-radius:10px;font-size:11px;font-weight:700;
+}
+.f-arrow{font-size:12px;color:var(--muted);transition:transform .25s;}
+.folder.open .f-arrow{transform:rotate(90deg);}
+.file-list{display:none;padding:0 12px 12px;}
+.folder.open .file-list{display:block;}
+.file-item{
+  display:flex;align-items:center;gap:8px;
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:8px;padding:9px 10px;margin-bottom:6px;
+}
+.ftype{
+  padding:2px 7px;border-radius:6px;font-size:10px;
+  font-weight:700;font-family:'Tajawal';flex-shrink:0;
+}
+.ftype-pdf{background:rgba(255,107,107,.15);color:#ff8a8a;}
+.ftype-doc{background:rgba(59,158,255,.15);color:var(--blue);}
+.ftype-sheet{background:rgba(16,217,138,.15);color:var(--green);}
+.ftype-link{background:rgba(251,191,36,.15);color:var(--yellow);}
+.fname{flex:1;font-size:12px;font-family:'Tajawal';word-break:break-word;}
+.fdate{font-size:10px;color:var(--muted);font-family:'Tajawal';flex-shrink:0;}
+.del-btn{
+  background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.2);
+  color:var(--red);border-radius:6px;padding:4px 8px;
+  cursor:pointer;font-size:12px;flex-shrink:0;
+}
+.empty{text-align:center;color:var(--muted);font-size:12px;font-family:'Tajawal';padding:14px 0;}
+
+/* ── OPINIONS ── */
+.opinion-card{
+  background:var(--s2);border:1px solid var(--border);
+  border-radius:12px;padding:14px;margin-bottom:10px;
+}
+.op-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.op-avatar{
+  width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;flex-shrink:0;
+}
+.op-name{font-size:13px;font-weight:700;}
+.op-sub{font-size:10px;color:var(--muted);font-family:'Tajawal';}
+.op-cat{
+  padding:2px 8px;border-radius:6px;font-size:10px;
+  font-weight:700;font-family:'Tajawal';margin-right:auto;flex-shrink:0;
+}
+.op-text{font-size:12.5px;color:rgba(232,237,245,.8);font-family:'Tajawal';line-height:1.6;}
+
+/* ── STARS ── */
+.stars-row{display:flex;gap:5px;margin-top:6px;}
+.star{font-size:26px;background:none;border:none;cursor:pointer;color:#2a3a50;transition:transform .15s;}
+.star.on{color:var(--yellow);}
+.star:active{transform:scale(1.3);}
+
+/* ── SUMMARY GRID ── */
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.sum-item{background:var(--s2);border-radius:10px;padding:11px;text-align:center;}
+.sum-num{font-size:20px;font-weight:800;}
+.sum-lbl{font-size:10px;color:var(--muted);font-family:'Tajawal';}
+
+/* ── SHARE / EXPORT ── */
+.share-bar{
+  display:flex;gap:8px;margin-bottom:16px;
+}
+.btn-sec{
+  flex:1;padding:10px;border-radius:10px;border:none;cursor:pointer;
+  font-family:'Cairo';font-size:12px;font-weight:700;transition:opacity .2s;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.btn-export{background:rgba(59,158,255,.12);border:1px solid rgba(59,158,255,.25);color:var(--blue);}
+.btn-import{background:rgba(16,217,138,.12);border:1px solid rgba(16,217,138,.25);color:var(--green);}
+.btn-sec:active{opacity:.7;}
+
+/* ── INSTALL PROMPT ── */
+.install-banner{
+  background:linear-gradient(135deg,rgba(59,158,255,.12),rgba(139,92,246,.12));
+  border:1px solid rgba(59,158,255,.25);border-radius:12px;
+  padding:13px 15px;margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;
+}
+.install-banner p{font-size:12px;font-family:'Tajawal';flex:1;line-height:1.5;}
+.btn-install{
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;border:none;padding:8px 14px;border-radius:8px;
+  font-family:'Cairo';font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;
+}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:80px;left:50%;
+  transform:translateX(-50%) translateY(60px);
+  background:linear-gradient(135deg,#1a2a4a,#2a1a50);
+  border:1px solid rgba(59,158,255,.3);
+  color:var(--text);padding:11px 22px;border-radius:12px;
+  font-size:13px;font-weight:600;z-index:999;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+  pointer-events:none;white-space:nowrap;
+}
+#toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ── BOTTOM NAV SAFE AREA ── */
+.bottom-safe{height:env(safe-area-inset-bottom,0px);background:var(--bg);flex-shrink:0;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="brand">
+    <div class="brand-icon">🦷</div>
+    <div>
+      <h1>منى الأكاديمي</h1>
+      <p>رابطة كلية طب الأسنان</p>
+    </div>
+  </div>
+  <div class="save-badge">
+    <div class="save-dot"></div>
+    محفوظ
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('files',this)">📁 الملفات</button>
+  <button class="tab" onclick="switchTab('survey',this)">📊 الآراء</button>
+  <button class="tab" onclick="switchTab('share',this)">🔗 المشاركة</button>
+</div>
+
+<!-- PANELS -->
+<div class="panels">
+
+  <!-- FILES PANEL -->
+  <div class="panel active" id="panel-files">
+
+    <div id="install-banner" class="install-banner" style="display:none">
+      <span style="font-size:22px">📲</span>
+      <p>ثبّتي التطبيق على شاشتك الرئيسية للوصول السريع!</p>
+      <button class="btn-install" onclick="installApp()">تثبيت</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-num" id="st-total" style="color:var(--blue)">0</div><div class="stat-lbl">إجمالي الملفات</div></div>
+      <div class="stat"><div class="stat-num" style="color:var(--green)">5</div><div class="stat-lbl">المستويات</div></div>
+      <div class="stat"><div class="stat-num" id="st-new" style="color:var(--yellow)">0</div><div class="stat-lbl">أضيف حديثاً</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">➕ إضافة ملف</div>
+      <div class="input-row">
+        <select class="inp" id="fl-level">
+          <option value="">اختاري المستوى</option>
+          <option value="1">المستوى الأول</option>
+          <option value="2">المستوى الثاني</option>
+          <option value="3">المستوى الثالث</option>
+          <option value="4">المستوى الرابع</option>
+          <option value="5">المستوى الخامس</option>
+        </select>
+        <select class="inp" id="fl-type">
+          <option value="">نوع الملف</option>
+          <option value="pdf">PDF</option>
+          <option value="doc">ملخص Word</option>
+          <option value="sheet">جدول أسئلة</option>
+          <option value="link">رابط خارجي</option>
+        </select>
+        <input class="inp" id="fl-name" placeholder="اسم الملف أو الرابط..."/>
+        <button class="btn-main" onclick="addFile()">✅ إضافة الملف</button>
+      </div>
+    </div>
+
+    <div class="folders" id="folders-list"></div>
+  </div>
+
+  <!-- SURVEY PANEL -->
+  <div class="panel" id="panel-survey">
+
+    <div class="summary" id="survey-summary">
+      <div class="sum-item"><div class="sum-num" id="sm-total" style="color:var(--blue)">0</div><div class="sum-lbl">الآراء</div></div>
+      <div class="sum-item"><div class="sum-num" id="sm-avg" style="color:var(--yellow)">—</div><div class="sum-lbl">متوسط التقييم</div></div>
+      <div class="sum-item"><div class="sum-num" id="sm-cat" style="color:var(--red);font-size:14px">—</div><div class="sum-lbl">أكثر مشكلة</div></div>
+      <div class="sum-item"><div class="sum-num" id="sm-lvl" style="color:var(--green);font-size:13px">—</div><div class="sum-lbl">أكثر مستوى</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">✍️ إضافة رأي طالب</div>
+      <div class="input-row">
+        <input class="inp" id="s-name" placeholder="الاسم (أو اتركه مجهول)"/>
+        <select class="inp" id="s-level">
+          <option>المستوى الأول</option>
+          <option>المستوى الثاني</option>
+          <option>المستوى الثالث</option>
+          <option>المستوى الرابع</option>
+          <option>المستوى الخامس</option>
+        </select>
+        <select class="inp" id="s-cat">
+          <option value="exams">الاختبارات والتقييم</option>
+          <option value="schedule">الجداول والمواعيد</option>
+          <option value="teaching">أسلوب التدريس</option>
+          <option value="lab">السريريات والمختبرات</option>
+          <option value="other">أخرى</option>
+        </select>
+        <div>
+          <div style="font-size:11px;color:var(--muted);font-family:'Tajawal';margin-bottom:4px">التقييم العام</div>
+          <div class="stars-row" id="stars-row">
+            <button class="star" onclick="setRating(1)">★</button>
+            <button class="star" onclick="setRating(2)">★</button>
+            <button class="star" onclick="setRating(3)">★</button>
+            <button class="star" onclick="setRating(4)">★</button>
+            <button class="star" onclick="setRating(5)">★</button>
+          </div>
+        </div>
+        <textarea class="inp" id="s-text" placeholder="اكتبي هنا رأي الطالب أو المشكلة..."></textarea>
+        <button class="btn-main" onclick="addOpinion()">💬 حفظ الرأي</button>
+      </div>
+    </div>
+
+    <div id="opinions-list"></div>
+  </div>
+
+  <!-- SHARE PANEL -->
+  <div class="panel" id="panel-share">
+
+    <div class="card">
+      <div class="card-title">📲 تثبيت التطبيق</div>
+      <div style="font-size:13px;font-family:'Tajawal';line-height:1.9;color:rgba(232,237,245,.85)">
+        <b style="color:var(--blue)">🍎 آيفون (Safari):</b><br/>
+        افتحي الموقع ← زر المشاركة ⬆️ ← "إضافة إلى الشاشة الرئيسية"<br/><br/>
+        <b style="color:var(--green)">🤖 أندرويد (Chrome):</b><br/>
+        افتحي الموقع ← ثلاث نقاط ⋮ ← "إضافة إلى الشاشة الرئيسية"<br/><br/>
+        <b style="color:var(--yellow)">💡 النتيجة:</b><br/>
+        أيقونة التطبيق تظهر على شاشتك مثل أي تطبيق عادي!
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔗 مشاركة البيانات مع الطلاب</div>
+      <p style="font-size:12px;font-family:'Tajawal';color:var(--muted);margin-bottom:14px;line-height:1.7">
+        صدّري البيانات وشاركيها مع أعضاء الرابطة، يقدرون يستوردونها في تطبيقهم
+      </p>
+      <div class="share-bar">
+        <button class="btn-sec btn-export" onclick="exportData()">📤 تصدير البيانات</button>
+        <button class="btn-sec btn-import" onclick="document.getElementById('import-file').click()">📥 استيراد بيانات</button>
+        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)"/>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🗑️ إعادة الضبط</div>
+      <p style="font-size:12px;font-family:'Tajawal';color:var(--muted);margin-bottom:14px">
+        حذف جميع البيانات وبدء من جديد
+      </p>
+      <button onclick="resetData()" style="
+        width:100%;padding:11px;border-radius:10px;border:none;cursor:pointer;
+        background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.25);
+        color:var(--red);font-family:'Cairo';font-size:13px;font-weight:700;
+      ">🗑️ حذف كل البيانات</button>
+    </div>
+
+    <div class="card" style="text-align:center;padding:20px;">
+      <div style="font-size:40px;margin-bottom:10px">🦷</div>
+      <div style="font-size:15px;font-weight:700;margin-bottom:4px">منى إسماعيل</div>
+      <div style="font-size:12px;color:var(--muted);font-family:'Tajawal'">نائب الرئيس الأكاديمي</div>
+      <div style="font-size:12px;color:var(--muted);font-family:'Tajawal'">رابطة كلية طب الأسنان</div>
+      <div style="margin-top:14px;font-size:12px;color:var(--blue);font-family:'Tajawal';font-style:italic">
+        "معك في كل مادة، وصوتك عند كل قرار"
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="bottom-safe"></div>
+<div id="toast"></div>
+
+<script>
+// ── DATA ──
+const LEVELS = [
+  {id:1,name:'المستوى الأول',color:'#3b9eff',icon:'📘'},
+  {id:2,name:'المستوى الثاني',color:'#8b5cf6',icon:'📙'},
+  {id:3,name:'المستوى الثالث',color:'#10d98a',icon:'📗'},
+  {id:4,name:'المستوى الرابع',color:'#fbbf24',icon:'📒'},
+  {id:5,name:'المستوى الخامس',color:'#ff6b6b',icon:'📕'},
+];
+const CAT = {
+  exams:{label:'الاختبارات',bg:'rgba(255,107,107,.15)',color:'#ff8a8a'},
+  schedule:{label:'الجداول',bg:'rgba(251,191,36,.15)',color:'#fbbf24'},
+  teaching:{label:'التدريس',bg:'rgba(59,158,255,.15)',color:'#3b9eff'},
+  lab:{label:'السريريات',bg:'rgba(16,217,138,.15)',color:'#10d98a'},
+  other:{label:'أخرى',bg:'rgba(139,92,246,.15)',color:'#8b5cf6'},
+};
+const AVG_COLORS=['#3b9eff','#8b5cf6','#10d98a','#fbbf24','#ff6b6b','#f472b6'];
+
+let files = JSON.parse(localStorage.getItem('mona_files')||'{"1":[],"2":[],"3":[],"4":[],"5":[]}');
+let opinions = JSON.parse(localStorage.getItem('mona_opinions')||'[]');
+let openFolder = null;
+let currentRating = 0;
+let deferredPrompt = null;
+
+// ── SAVE ──
+function save(){
+  localStorage.setItem('mona_files', JSON.stringify(files));
+  localStorage.setItem('mona_opinions', JSON.stringify(opinions));
+}
+
+// ── TABS ──
+function switchTab(id, el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-'+id).classList.add('active');
+}
+
+// ── TOAST ──
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ── INSTALL ──
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault(); deferredPrompt=e;
+  document.getElementById('install-banner').style.display='flex';
+});
+function installApp(){
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(()=>{
+    deferredPrompt=null;
+    document.getElementById('install-banner').style.display='none';
+  });
+}
+
+// ── FILES ──
+function addFile(){
+  const lvl=document.getElementById('fl-level').value;
+  const typ=document.getElementById('fl-type').value;
+  const nam=document.getElementById('fl-name').value.trim();
+  if(!lvl||!typ||!nam){toast('⚠️ أكملي جميع الحقول');return;}
+  const now=new Date();
+  const date=`${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}`;
+  if(!files[lvl]) files[lvl]=[];
+  files[lvl].unshift({name:nam,type:typ,date,isNew:true,id:Date.now()});
+  openFolder=parseInt(lvl);
+  document.getElementById('fl-name').value='';
+  save(); renderFiles();
+  toast('✅ تمت إضافة الملف');
+}
+
+function deleteFile(lvl,id,e){
+  e.stopPropagation();
+  files[lvl]=files[lvl].filter(f=>f.id!==id);
+  save(); renderFiles();
+  toast('🗑 تم حذف الملف');
+}
+
+function toggleFolder(id){
+  openFolder= openFolder===id ? null : id;
+  renderFiles();
+}
+
+function renderFiles(){
+  let total=0, newCount=0;
+  Object.values(files).forEach(arr=>{
+    total+=arr.length;
+    newCount+=arr.filter(f=>f.isNew).length;
+  });
+  document.getElementById('st-total').textContent=total;
+  document.getElementById('st-new').textContent=newCount;
+
+  const list=document.getElementById('folders-list');
+  list.innerHTML=LEVELS.map(l=>{
+    const lf=files[l.id]||[];
+    const isOpen=openFolder===l.id;
+    return `
+    <div class="folder${isOpen?' open':''}" style="--fc:${l.color}" onclick="toggleFolder(${l.id})">
+      <div class="folder-head">
+        <span class="f-icon">${l.icon}</span>
+        <div class="f-info">
+          <div class="f-name">${l.name}</div>
+          <div class="f-count">${lf.length} ملف</div>
+        </div>
+        ${lf.length?`<span class="f-badge">${lf.length}</span>`:''}
+        <span class="f-arrow">›</span>
+      </div>
+      <div class="file-list">
+        ${lf.length===0
+          ? '<div class="empty">لا توجد ملفات بعد</div>'
+          : lf.map(f=>`
+          <div class="file-item" onclick="event.stopPropagation()">
+            <span class="ftype ftype-${f.type}">${f.type.toUpperCase()}</span>
+            <span class="fname">${f.name}</span>
+            <span class="fdate">${f.date}</span>
+            <button class="del-btn" onclick="deleteFile(${l.id},${f.id},event)">🗑</button>
+          </div>`).join('')
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── RATING ──
+function setRating(n){
+  currentRating=n;
+  document.querySelectorAll('#stars-row .star').forEach((s,i)=>{
+    s.classList.toggle('on', i<n);
+  });
+}
+
+// ── OPINIONS ──
+function addOpinion(){
+  const text=document.getElementById('s-text').value.trim();
+  if(!text){toast('⚠️ اكتبي رأي الطالب أولاً');return;}
+  const name=document.getElementById('s-name').value.trim()||'مجهول';
+  opinions.unshift({
+    id:Date.now(),
+    name,
+    level:document.getElementById('s-level').value,
+    cat:document.getElementById('s-cat').value,
+    rating:currentRating,
+    text,
+    color:AVG_COLORS[Math.floor(Math.random()*AVG_COLORS.length)],
+    initial:name[0]||'م',
+    date:new Date().toLocaleDateString('ar-SA')
+  });
+  document.getElementById('s-name').value='';
+  document.getElementById('s-text').value='';
+  setRating(0);
+  save(); renderOpinions();
+  toast('✅ تم حفظ الرأي');
+}
+
+function deleteOpinion(id){
+  opinions=opinions.filter(o=>o.id!==id);
+  save(); renderOpinions();
+  toast('🗑 تم حذف الرأي');
+}
+
+function renderOpinions(){
+  const rated=opinions.filter(o=>o.rating>0);
+  const avg=rated.length?(rated.reduce((s,o)=>s+o.rating,0)/rated.length).toFixed(1)+'★':'—';
+  const catCount={};
+  opinions.forEach(o=>{catCount[o.cat]=(catCount[o.cat]||0)+1;});
+  const topCat=Object.entries(catCount).sort((a,b)=>b[1]-a[1])[0];
+  const lvlCount={};
+  opinions.forEach(o=>{lvlCount[o.level]=(lvlCount[o.level]||0)+1;});
+  const topLvl=Object.entries(lvlCount).sort((a,b)=>b[1]-a[1])[0];
+
+  document.getElementById('sm-total').textContent=opinions.length;
+  document.getElementById('sm-avg').textContent=avg;
+  document.getElementById('sm-cat').textContent=topCat?CAT[topCat[0]].label:'—';
+  document.getElementById('sm-lvl').textContent=topLvl?topLvl[0].replace('المستوى ','م'):'—';
+
+  const list=document.getElementById('opinions-list');
+  if(!opinions.length){
+    list.innerHTML='<div class="empty" style="padding:30px">لا توجد آراء بعد — ابدأي الآن!</div>';
+    return;
+  }
+  list.innerHTML=opinions.map(o=>`
+    <div class="opinion-card">
+      <div class="op-top">
+        <div class="op-avatar" style="background:${o.color}22;color:${o.color}">${o.initial}</div>
+        <div style="flex:1">
+          <div class="op-name">${o.name}</div>
+          <div class="op-sub">${o.level} · ${o.rating?'★'.repeat(o.rating)+'☆'.repeat(5-o.rating):'بدون تقييم'}</div>
+        </div>
+        <span class="op-cat" style="background:${CAT[o.cat].bg};color:${CAT[o.cat].color}">${CAT[o.cat].label}</span>
+        <button onclick="deleteOpinion(${o.id})" class="del-btn">🗑</button>
+      </div>
+      <div class="op-text">${o.text}</div>
+    </div>
+  `).join('');
+}
+
+// ── EXPORT / IMPORT ──
+function exportData(){
+  const data={files,opinions,exportDate:new Date().toISOString(),app:'مونى الأكاديمي'};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=`mona-academic-${Date.now()}.json`; a.click();
+  URL.revokeObjectURL(url);
+  toast('📤 تم تصدير البيانات');
+}
+
+function importData(e){
+  const file=e.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(data.files) files=data.files;
+      if(data.opinions) opinions=data.opinions;
+      save(); renderFiles(); renderOpinions();
+      toast('📥 تم استيراد البيانات بنجاح');
+    }catch{toast('⚠️ ملف غير صالح');}
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+
+function resetData(){
+  if(!confirm('هل أنتِ متأكدة؟ سيتم حذف جميع البيانات!')) return;
+  files={'1':[],'2':[],'3':[],'4':[],'5':[]};
+  opinions=[]; openFolder=null;
+  save(); renderFiles(); renderOpinions();
+  toast('🗑 تمت إعادة الضبط');
+}
+
+// ── SERVICE WORKER ──
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+
+// ── INIT ──
+renderFiles();
+renderOpinions();
+</script>
+</body>
+</html>
