@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="theme-color" content="#070d1a"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="منى الأكاديمي"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon-192.svg"/>
+<title>منى الأكاديمي 🦷</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#070d1a;--s1:#0f1829;--s2:#162035;--blue:#3b9eff;--purple:#8b5cf6;--green:#10d98a;--red:#ff6b6b;--yellow:#fbbf24;--text:#e8edf5;--muted:#6b7a99;--border:rgba(59,158,255,0.13);}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);direction:rtl;display:flex;flex-direction:column;}
+.header{background:linear-gradient(135deg,#0d1826,#150e30);border-bottom:1px solid var(--border);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-icon{width:38px;height:38px;border-radius:10px;font-size:20px;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;}
+.brand h1{font-size:15px;font-weight:700;}
+.brand p{font-size:10px;color:var(--muted);font-family:'Tajawal';}
+.sbadge{padding:4px 11px;border-radius:20px;font-size:10px;font-family:'Tajawal';display:flex;align-items:center;gap:5px;}
+.s-on{background:rgba(16,217,138,.12);border:1px solid rgba(16,217,138,.25);color:var(--green);}
+.s-off{background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.25);color:var(--red);}
+.s-wait{background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.25);color:var(--yellow);}
+.dot{width:5px;height:5px;border-radius:50%;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+.tabs{display:flex;background:var(--s1);border-bottom:1px solid var(--border);flex-shrink:0;}
+.tab{flex:1;padding:13px 0;font-size:12px;font-weight:700;font-family:'Cairo';border:none;cursor:pointer;background:transparent;color:var(--muted);border-bottom:2px solid transparent;display:flex;align-items:center;justify-content:center;gap:5px;}
+.tab.active{color:var(--blue);border-bottom:2px solid var(--blue);background:rgba(59,158,255,.05);}
+.panels{flex:1;overflow:hidden;position:relative;}
+.panel{position:absolute;inset:0;overflow-y:auto;padding:18px;display:none;}
+.panel.active{display:block;}
+.panel::-webkit-scrollbar{width:3px;}
+.panel::-webkit-scrollbar-thumb{background:rgba(59,158,255,.3);border-radius:4px;}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px;}
+.card-title{font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.stat{background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;}
+.stat-num{font-size:22px;font-weight:900;}
+.stat-lbl{font-size:10px;color:var(--muted);font-family:'Tajawal';}
+.inp,select.inp,textarea.inp{width:100%;background:var(--s2);border:1px solid var(--border);color:var(--text);padding:11px 13px;border-radius:10px;font-family:'Cairo';font-size:13px;outline:none;transition:border-color .2s;margin-bottom:9px;}
+.inp:focus,select.inp:focus,textarea.inp:focus{border-color:var(--blue);}
+select.inp option{background:var(--s2);}
+textarea.inp{min-height:80px;resize:none;}
+.btn-main{width:100%;padding:12px;border-radius:11px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;font-family:'Cairo';font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-main:disabled{opacity:.5;cursor:not-allowed;}
+.upload-area{border:2px dashed rgba(59,158,255,.3);border-radius:12px;padding:24px;text-align:center;cursor:pointer;background:rgba(59,158,255,.03);margin-bottom:10px;}
+.upload-area:active{background:rgba(59,158,255,.08);}
+.fprev{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+.fprev-name{flex:1;font-size:12px;font-family:'Tajawal';}
+.fprev-size{font-size:10px;color:var(--muted);font-family:'Tajawal';}
+.folders{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.folder{background:var(--s2);border:1px solid var(--border);border-right:4px solid var(--fc,var(--blue));border-radius:12px;overflow:hidden;}
+.folder-head{display:flex;align-items:center;gap:10px;padding:13px 14px;cursor:pointer;}
+.f-icon{font-size:22px;}
+.f-info{flex:1;}
+.f-name{font-size:13px;font-weight:700;}
+.f-count{font-size:10px;color:var(--muted);font-family:'Tajawal';}
+.f-badge{background:rgba(59,158,255,.13);color:var(--blue);padding:2px 9px;border-radius:10px;font-size:11px;font-weight:700;}
+.f-arrow{font-size:12px;color:var(--muted);transition:transform .25s;}
+.folder.open .f-arrow{transform:rotate(90deg);}
+.file-list{display:none;padding:0 12px 12px;}
+.folder.open .file-list{display:block;}
+.file-item{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 10px;margin-bottom:6px;}
+.ftype{padding:2px 7px;border-radius:6px;font-size:10px;font-weight:700;font-family:'Tajawal';flex-shrink:0;}
+.tp-pdf{background:rgba(255,107,107,.15);color:#ff8a8a;}
+.tp-doc{background:rgba(59,158,255,.15);color:var(--blue);}
+.tp-sheet{background:rgba(16,217,138,.15);color:var(--green);}
+.tp-link{background:rgba(251,191,36,.15);color:var(--yellow);}
+.tp-file{background:rgba(139,92,246,.15);color:var(--purple);}
+.fname{flex:1;font-size:12px;font-family:'Tajawal';word-break:break-word;}
+.open-btn{background:rgba(59,158,255,.1);border:1px solid rgba(59,158,255,.2);color:var(--blue);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:11px;font-family:'Cairo';flex-shrink:0;}
+.del-btn{background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.2);color:var(--red);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:12px;flex-shrink:0;}
+.empty{text-align:center;color:var(--muted);font-size:12px;font-family:'Tajawal';padding:14px 0;}
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.sum-item{background:var(--s2);border-radius:10px;padding:11px;text-align:center;}
+.sum-num{font-size:20px;font-weight:800;}
+.sum-lbl{font-size:10px;color:var(--muted);font-family:'Tajawal';}
+.opinion-card{background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;}
+.op-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.op-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
+.op-name{font-size:13px;font-weight:700;}
+.op-sub{font-size:10px;color:var(--muted);font-family:'Tajawal';}
+.op-cat{padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;font-family:'Tajawal';margin-right:auto;flex-shrink:0;}
+.op-text{font-size:12.5px;color:rgba(232,237,245,.8);font-family:'Tajawal';line-height:1.6;}
+.stars-row{display:flex;gap:5px;margin-top:6px;}
+.star{font-size:26px;background:none;border:none;cursor:pointer;color:#2a3a50;}
+.star.on{color:var(--yellow);}
+.prog-bar{width:100%;height:4px;background:rgba(59,158,255,.1);border-radius:4px;overflow:hidden;margin-bottom:10px;display:none;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:4px;transition:width .3s;width:0%;}
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(60px);background:linear-gradient(135deg,#1a2a4a,#2a1a50);border:1px solid rgba(59,158,255,.3);color:var(--text);padding:11px 22px;border-radius:12px;font-size:13px;font-weight:600;z-index:999;transition:transform .35s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+.bottom-safe{height:env(safe-area-inset-bottom,0px);background:var(--bg);flex-shrink:0;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">
+    <div class="brand-icon">🦷</div>
+    <div><h1>منى الأكاديمي</h1><p>رابطة كلية طب الأسنان</p></div>
+  </div>
+  <div class="sbadge s-wait" id="sbadge">
+    <div class="dot" style="background:var(--yellow)"></div>
+    <span id="stext">جاري الاتصال...</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('files',this)">📁 الملفات</button>
+  <button class="tab" onclick="switchTab('survey',this)">📊 الآراء</button>
+  <button class="tab" onclick="switchTab('upload',this)">⬆️ رفع</button>
+</div>
+
+<div class="panels">
+
+  <!-- FILES -->
+  <div class="panel active" id="panel-files">
+    <div class="stats">
+      <div class="stat"><div class="stat-num" id="st-total" style="color:var(--blue)">0</div><div class="stat-lbl">إجمالي الملفات</div></div>
+      <div class="stat"><div class="stat-num" style="color:var(--green)">5</div><div class="stat-lbl">المستويات</div></div>
+      <div class="stat"><div class="stat-num" id="st-op" style="color:var(--yellow)">0</div><div class="stat-lbl">الآراء</div></div>
+    </div>
+    <div class="folders" id="folders-list"><div class="empty">⏳ جاري التحميل...</div></div>
+  </div>
+
+  <!-- SURVEY -->
+  <div class="panel" id="panel-survey">
+    <div class="summary">
+      <div class="sum-item"><div class="sum-num" id="sm-t" style="color:var(--blue)">0</div><div class="sum-lbl">الآراء</div></div>
+      <div class="sum-item"><div class="sum-num" id="sm-a" style="color:var(--yellow)">—</div><div class="sum-lbl">متوسط التقييم</div></div>
+      <div class="sum-item"><div class="sum-num" id="sm-c" style="color:var(--red);font-size:14px">—</div><div class="sum-lbl">أكثر مشكلة</div></div>
+      <div class="sum-item"><div class="sum-num" id="sm-l" style="color:var(--green);font-size:13px">—</div><div class="sum-lbl">أكثر مستوى</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">✍️ إضافة رأي طالب</div>
+      <input class="inp" id="s-name" placeholder="الاسم (أو اتركه مجهول)"/>
+      <select class="inp" id="s-level">
+        <option>المستوى الأول</option><option>المستوى الثاني</option>
+        <option>المستوى الثالث</option><option>المستوى الرابع</option><option>المستوى الخامس</option>
+      </select>
+      <select class="inp" id="s-cat">
+        <option value="exams">الاختبارات والتقييم</option>
+        <option value="schedule">الجداول والمواعيد</option>
+        <option value="teaching">أسلوب التدريس</option>
+        <option value="lab">السريريات والمختبرات</option>
+        <option value="other">أخرى</option>
+      </select>
+      <div style="font-size:11px;color:var(--muted);font-family:'Tajawal';margin-bottom:6px">التقييم العام</div>
+      <div class="stars-row" id="stars-row">
+        <button class="star" onclick="setRating(1)">★</button>
+        <button class="star" onclick="setRating(2)">★</button>
+        <button class="star" onclick="setRating(3)">★</button>
+        <button class="star" onclick="setRating(4)">★</button>
+        <button class="star" onclick="setRating(5)">★</button>
+      </div>
+      <textarea class="inp" id="s-text" placeholder="اكتبي هنا رأي الطالب..." style="margin-top:10px"></textarea>
+      <button class="btn-main" id="op-btn" onclick="addOpinion()">💬 حفظ الرأي</button>
+    </div>
+    <div id="opinions-list"></div>
+  </div>
+
+  <!-- UPLOAD -->
+  <div class="panel" id="panel-upload">
+    <div class="card">
+      <div class="card-title">⬆️ رفع ملف للطلاب</div>
+      <select class="inp" id="up-level">
+        <option value="">اختاري المستوى</option>
+        <option value="1">المستوى الأول</option><option value="2">المستوى الثاني</option>
+        <option value="3">المستوى الثالث</option><option value="4">المستوى الرابع</option>
+        <option value="5">المستوى الخامس</option>
+      </select>
+      <input class="inp" id="up-desc" placeholder="وصف الملف (مثال: ملخص تشريح الأسنان)"/>
+      <div class="upload-area" onclick="document.getElementById('finput').click()">
+        <div style="font-size:36px;margin-bottom:8px">📎</div>
+        <div style="font-size:13px;color:var(--muted);font-family:'Tajawal'">اضغطي لاختيار ملف<br/><b style="color:var(--blue)">PDF · Word · Excel · صور</b></div>
+      </div>
+      <input type="file" id="finput" style="display:none" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png" onchange="fileChosen(event)"/>
+      <div id="fprev"></div>
+      <div style="text-align:center;color:var(--muted);font-size:12px;font-family:'Tajawal';margin:8px 0">— أو أضيفي رابط Google Drive —</div>
+      <input class="inp" id="up-link" placeholder="https://drive.google.com/..."/>
+      <div class="prog-bar" id="prog"><div class="prog-fill" id="prog-fill"></div></div>
+      <button class="btn-main" id="up-btn" onclick="doUpload()">⬆️ رفع الملف للجميع</button>
+    </div>
+    <div class="card" style="text-align:center;padding:20px">
+      <div style="font-size:40px;margin-bottom:10px">🦷</div>
+      <div style="font-size:15px;font-weight:700">منى إسماعيل</div>
+      <div style="font-size:12px;color:var(--muted);font-family:'Tajawal'">نائب الرئيس الأكاديمي</div>
+      <div style="margin-top:12px;font-size:12px;color:var(--blue);font-family:'Tajawal';font-style:italic">"معك في كل مادة، وصوتك عند كل قرار"</div>
+    </div>
+  </div>
+
+</div>
+<div class="bottom-safe"></div>
+<div id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+// ══════════════════════════════════════
+// 🔑 ضعي هنا بياناتك من Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyAzUbGRkfexy9g7dRDkIsLNlu8IE-Bhc_U",
+  authDomain: "mona-academic.firebaseapp.com",
+  projectId: "mona-academic",
+  storageBucket: "mona-academic.firebasestorage.app",
+  messagingSenderId: "417814517630",
+  appId: "1:417814517630:web:f18c09e748fc3ff3c3852f",
+  measurementId: "G-0LWMJST4SH"
+};
+// ══════════════════════════════════════
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+let storage; try{ storage=getStorage(app); }catch(e){}
+
+const LEVELS=[
+  {id:'1',name:'المستوى الأول',color:'#3b9eff',icon:'📘'},
+  {id:'2',name:'المستوى الثاني',color:'#8b5cf6',icon:'📙'},
+  {id:'3',name:'المستوى الثالث',color:'#10d98a',icon:'📗'},
+  {id:'4',name:'المستوى الرابع',color:'#fbbf24',icon:'📒'},
+  {id:'5',name:'المستوى الخامس',color:'#ff6b6b',icon:'📕'},
+];
+const CAT={
+  exams:{label:'الاختبارات',bg:'rgba(255,107,107,.15)',c:'#ff8a8a'},
+  schedule:{label:'الجداول',bg:'rgba(251,191,36,.15)',c:'#fbbf24'},
+  teaching:{label:'التدريس',bg:'rgba(59,158,255,.15)',c:'#3b9eff'},
+  lab:{label:'السريريات',bg:'rgba(16,217,138,.15)',c:'#10d98a'},
+  other:{label:'أخرى',bg:'rgba(139,92,246,.15)',c:'#8b5cf6'},
+};
+const AVC=['#3b9eff','#8b5cf6','#10d98a','#fbbf24','#ff6b6b','#f472b6'];
+
+let allFiles=[], allOpinions=[], openFolder=null, curRating=0, selFile=null;
+
+// status
+function setSt(cls,txt){
+  const b=document.getElementById('sbadge');
+  b.className='sbadge '+cls;
+  const dotC=cls==='s-on'?'var(--green)':cls==='s-off'?'var(--red)':'var(--yellow)';
+  b.querySelector('.dot').style.background=dotC;
+  document.getElementById('stext').textContent=txt;
+}
+
+// toast
+window.toast=function(m){
+  const t=document.getElementById('toast');
+  t.textContent=m;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+};
+
+// tabs
+window.switchTab=function(id,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-'+id).classList.add('active');
+};
+
+// realtime files
+const fq=query(collection(db,'files'),orderBy('createdAt','desc'));
+onSnapshot(fq,snap=>{
+  allFiles=snap.docs.map(d=>({id:d.id,...d.data()}));
+  renderFiles();
+  setSt('s-on','متصل ✓');
+},e=>{setSt('s-off','غير متصل');console.error(e);});
+
+// realtime opinions
+const oq=query(collection(db,'opinions'),orderBy('createdAt','desc'));
+onSnapshot(oq,snap=>{
+  allOpinions=snap.docs.map(d=>({id:d.id,...d.data()}));
+  renderOpinions();
+  document.getElementById('st-op').textContent=allOpinions.length;
+},e=>console.error(e));
+
+// file chosen
+window.fileChosen=function(e){
+  selFile=e.target.files[0];
+  if(!selFile)return;
+  const sz=(selFile.size/1024/1024).toFixed(1);
+  const ext=selFile.name.split('.').pop().toLowerCase();
+  const ic={pdf:'📄',doc:'📝',docx:'📝',ppt:'📊',pptx:'📊',xls:'📋',xlsx:'📋',jpg:'🖼',jpeg:'🖼',png:'🖼'};
+  document.getElementById('fprev').innerHTML=`
+    <div class="fprev">
+      <span style="font-size:20px">${ic[ext]||'📎'}</span>
+      <span class="fprev-name">${selFile.name}</span>
+      <span class="fprev-size">${sz} MB</span>
+    </div>`;
+};
+
+// upload
+window.doUpload=async function(){
+  const level=document.getElementById('up-level').value;
+  const desc=document.getElementById('up-desc').value.trim();
+  const link=document.getElementById('up-link').value.trim();
+  if(!level){toast('⚠️ اختاري المستوى');return;}
+  if(!desc){toast('⚠️ أضيفي وصفاً للملف');return;}
+  if(!selFile&&!link){toast('⚠️ اختاري ملفاً أو أضيفي رابطاً');return;}
+  const btn=document.getElementById('up-btn');
+  btn.disabled=true;btn.textContent='⏳ جاري الرفع...';
+  try{
+    let url=link, ftype='link';
+    if(selFile&&storage){
+      const ext=selFile.name.split('.').pop().toLowerCase();
+      ftype=['pdf'].includes(ext)?'pdf':['doc','docx'].includes(ext)?'doc':['xls','xlsx'].includes(ext)?'sheet':'file';
+      document.getElementById('prog').style.display='block';
+      const sr=ref(storage,`files/${Date.now()}_${selFile.name}`);
+      const task=uploadBytesResumable(sr,selFile);
+      url=await new Promise((res,rej)=>{
+        task.on('state_changed',
+          s=>{document.getElementById('prog-fill').style.width=(s.bytesTransferred/s.totalBytes*100).toFixed(0)+'%';},
+          rej,
+          async()=>res(await getDownloadURL(task.snapshot.ref))
+        );
+      });
+    }
+    await addDoc(collection(db,'files'),{
+      name:desc, type:ftype, url, level,
+      createdAt:new Date().toISOString(),
+      date:new Date().toLocaleDateString('ar-SA')
+    });
+    selFile=null;
+    document.getElementById('fprev').innerHTML='';
+    document.getElementById('up-level').value='';
+    document.getElementById('up-desc').value='';
+    document.getElementById('up-link').value='';
+    document.getElementById('finput').value='';
+    document.getElementById('prog').style.display='none';
+    document.getElementById('prog-fill').style.width='0%';
+    toast('✅ تم الرفع! يظهر للجميع الآن 🎉');
+    switchTab('files',document.querySelectorAll('.tab')[0]);
+  }catch(e){toast('❌ خطأ: '+e.message);console.error(e);}
+  btn.disabled=false;btn.innerHTML='⬆️ رفع الملف للجميع';
+};
+
+// render files
+window.toggleFolder=function(id){openFolder=openFolder===id?null:id;renderFiles();};
+window.delFile=async function(id,e){
+  e.stopPropagation();
+  if(!confirm('حذف هذا الملف؟'))return;
+  try{await deleteDoc(doc(db,'files',id));toast('🗑 تم الحذف');}catch(e){toast('❌ خطأ');}
+};
+window.openFile=function(url,e){e.stopPropagation();if(url)window.open(url,'_blank');};
+
+function renderFiles(){
+  document.getElementById('st-total').textContent=allFiles.length;
+  document.getElementById('folders-list').innerHTML=LEVELS.map(l=>{
+    const lf=allFiles.filter(f=>f.level===l.id);
+    const isOpen=openFolder===l.id;
+    return`<div class="folder${isOpen?' open':''}" style="--fc:${l.color}" onclick="toggleFolder('${l.id}')">
+      <div class="folder-head">
+        <span class="f-icon">${l.icon}</span>
+        <div class="f-info"><div class="f-name">${l.name}</div><div class="f-count">${lf.length} ملف</div></div>
+        ${lf.length?`<span class="f-badge">${lf.length}</span>`:''}
+        <span class="f-arrow">›</span>
+      </div>
+      <div class="file-list">
+        ${lf.length?lf.map(f=>`
+          <div class="file-item" onclick="event.stopPropagation()">
+            <span class="ftype tp-${f.type}">${f.type.toUpperCase()}</span>
+            <span class="fname">${f.name}</span>
+            ${f.url?`<button class="open-btn" onclick="openFile('${f.url}',event)">فتح</button>`:''}
+            <button class="del-btn" onclick="delFile('${f.id}',event)">🗑</button>
+          </div>`)
+          .join(''):'<div class="empty">لا توجد ملفات بعد</div>'}
+      </div></div>`;
+  }).join('');
+}
+
+// opinions
+window.setRating=function(n){
+  curRating=n;
+  document.querySelectorAll('#stars-row .star').forEach((s,i)=>s.classList.toggle('on',i<n));
+};
+window.addOpinion=async function(){
+  const txt=document.getElementById('s-text').value.trim();
+  if(!txt){toast('⚠️ اكتبي الرأي أولاً');return;}
+  const btn=document.getElementById('op-btn');btn.disabled=true;
+  try{
+    await addDoc(collection(db,'opinions'),{
+      name:document.getElementById('s-name').value.trim()||'مجهول',
+      level:document.getElementById('s-level').value,
+      cat:document.getElementById('s-cat').value,
+      rating:curRating,text:txt,
+      color:AVC[Math.floor(Math.random()*AVC.length)],
+      createdAt:new Date().toISOString(),
+    });
+    document.getElementById('s-name').value='';
+    document.getElementById('s-text').value='';
+    window.setRating(0);
+    toast('✅ تم حفظ الرأي للجميع!');
+  }catch(e){toast('❌ خطأ: '+e.message);}
+  btn.disabled=false;
+};
+window.delOp=async function(id){
+  if(!confirm('حذف هذا الرأي؟'))return;
+  try{await deleteDoc(doc(db,'opinions',id));toast('🗑 تم الحذف');}catch(e){toast('❌ خطأ');}
+};
+
+function renderOpinions(){
+  const rated=allOpinions.filter(o=>o.rating>0);
+  const avg=rated.length?(rated.reduce((s,o)=>s+o.rating,0)/rated.length).toFixed(1)+'★':'—';
+  const cc={},lc={};
+  allOpinions.forEach(o=>{cc[o.cat]=(cc[o.cat]||0)+1;lc[o.level]=(lc[o.level]||0)+1;});
+  const tc=Object.entries(cc).sort((a,b)=>b[1]-a[1])[0];
+  const tl=Object.entries(lc).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('sm-t').textContent=allOpinions.length;
+  document.getElementById('sm-a').textContent=avg;
+  document.getElementById('sm-c').textContent=tc?CAT[tc[0]].label:'—';
+  document.getElementById('sm-l').textContent=tl?tl[0].replace('المستوى ','م'):'—';
+  const list=document.getElementById('opinions-list');
+  list.innerHTML=allOpinions.length?allOpinions.map(o=>`
+    <div class="opinion-card">
+      <div class="op-top">
+        <div class="op-av" style="background:${o.color}22;color:${o.color}">${(o.name||'م')[0]}</div>
+        <div style="flex:1"><div class="op-name">${o.name||'مجهول'}</div>
+          <div class="op-sub">${o.level} · ${o.rating?'★'.repeat(o.rating)+'☆'.repeat(5-o.rating):'بدون تقييم'}</div></div>
+        <span class="op-cat" style="background:${CAT[o.cat]?.bg};color:${CAT[o.cat]?.c}">${CAT[o.cat]?.label}</span>
+        <button onclick="delOp('${o.id}')" class="del-btn">🗑</button>
+      </div>
+      <div class="op-text">${o.text}</div>
+    </div>`).join('')
+    :'<div class="empty" style="padding:30px">لا توجد آراء بعد!</div>';
+}
+
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+setTimeout(()=>{if(document.getElementById('sbadge').classList.contains('s-wait'))setSt('s-off','تحقق من الاتصال');},8000);
+</script>
+</body>
+</html>
