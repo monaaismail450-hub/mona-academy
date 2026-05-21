@@ -2,7 +2,7 @@
   "name": "منى الأكاديمي - رابطة طب الأسنان",
   "short_name": "منى الأكاديمي",
   "description": "لوحة نائب الرئيس الأكاديمي لرابطة كلية طب الأسنان",
-  "start_url": "./index.html",
+  "start_url": "./app.html",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#070d1a",
@@ -23,6 +23,5 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["education", "productivity"],
-  "screenshots": []
+  "categories": ["education", "productivity"]
 }
